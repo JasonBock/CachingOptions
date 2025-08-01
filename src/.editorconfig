@@ -55,5 +55,8 @@ dotnet_diagnostic.CA1050.severity = none
 # CA1303: Retrieve strings from resource table
 dotnet_diagnostic.CA1303.severity = none
 
+# CA2007: ConfigureAwait()
+dotnet_diagnostic.CA2007.severity = none
+
 [*.xml]
 indent_style = tab
