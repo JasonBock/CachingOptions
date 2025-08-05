@@ -13,7 +13,7 @@ var entryOptions = new MemoryCacheEntryOptions()
 var services = new ServiceCollection();
 services.AddMemoryCache();
 services.AddHybridCache();
-//services.AddDistributedMemoryCache();
+services.AddDistributedMemoryCache();
 
 var provider = services.BuildServiceProvider();
 var memoryCache = provider.GetRequiredService<IMemoryCache>();
