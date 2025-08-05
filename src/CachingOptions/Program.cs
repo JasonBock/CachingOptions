@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 
@@ -11,8 +12,13 @@ var entryOptions = new MemoryCacheEntryOptions()
 
 var services = new ServiceCollection();
 services.AddMemoryCache();
+services.AddHybridCache();
+//services.AddDistributedMemoryCache();
+
 var provider = services.BuildServiceProvider();
 var memoryCache = provider.GetRequiredService<IMemoryCache>();
+var hybridCache = provider.GetRequiredService<HybridCache>();
+
 var startTime = Stopwatch.StartNew();
 
 Console.WriteLine($"{startTime} - Getting states...");
@@ -62,6 +68,40 @@ var evictedStates = (await memoryCache.GetOrCreateAsync(
 Console.WriteLine($"{startTime} - IMemoryCache states retrieved (after eviction), count is {evictedStates.Count}, Minnesota is indexed at {evictedStates.IndexOf("Minnesota")}");
 Console.WriteLine();
 Console.WriteLine();
+
+Console.WriteLine($"{startTime} - Getting HybridCache states...");
+var hybridStates = (await hybridCache.GetOrCreateAsync(
+	States,
+	entry => GetHybridStatesAsync(default)))!;
+Console.WriteLine($"{startTime} - HybridCache states retrieved, count is {hybridStates.Count}, Minnesota is indexed at {hybridStates.IndexOf("Minnesota")}");
+Console.WriteLine();
+Console.WriteLine();
+
+Console.WriteLine($"{startTime} - Getting HybridCache states (again)...");
+var hybridStatesAgain = (await hybridCache.GetOrCreateAsync(
+	States,
+	entry => GetHybridStatesAsync(default)))!;
+Console.WriteLine($"{startTime} - HybridCache states retrieved (again), count is {hybridStatesAgain.Count}, Minnesota is indexed at {hybridStatesAgain.IndexOf("Minnesota")}");
+Console.WriteLine();
+Console.WriteLine();
+
+static async ValueTask<List<string>> GetHybridStatesAsync(CancellationToken cancellationToken = default)
+{
+	await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+
+	return [
+		"Alabama", "Alaska", "Arizona", "Arkansas", "California",
+		"Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
+		"Hawaii", "Idaho", "Illinois", "Indiana", "Iowa",
+		"Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
+		"Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri",
+		"Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+		"New Mexico", "New York", "North Carolina", "North Dakota", "Ohio",
+		"Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+		"South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
+		"Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
+	];
+}
 
 static async Task<List<string>> GetStatesAsync()
 {
