@@ -1,7 +1,7 @@
 <Project>
   <ItemGroup>
-    <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="9.7.0" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="9.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
   </ItemGroup>
 </Project>
